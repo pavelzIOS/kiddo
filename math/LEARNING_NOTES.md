@@ -12,3 +12,13 @@ This public repository contains reusable lesson templates and general teaching g
 - Fatigue can affect performance: do not interpret late-lesson difficulty as proof of a skill gap.
 - Reports remain in local browser storage and are exported manually. Never commit individual reports or personal data.
 - For future lessons, ask for privately shared feedback rather than storing learner-specific information in this public repository.
+
+## Interactive lesson tenets (for all future lessons)
+- Every visual must serve the reasoning. Never display a number-line stepper or other decoration that already gives away the answer; omit unnecessary visuals.
+- Make visuals approximately twice the former baseline size: large, readable, touch-friendly, responsive on tablets and phones.
+- Multiple-choice tasks should normally have five plausible choices, not three, to reduce blind guessing. Exceptions: genuine binary decisions (yes/no, true/false) and tasks where five choices are pedagogically unnatural. Request an explanation where appropriate.
+- Use answer-choice styling clearly distinct from the overall page: accessible purple/lavender is preferred. Do not use red, green or yellow for choice correctness or selection; avoid relying on color alone.
+- Vary task mechanics and representations, not just story names. Avoid visuals that inadvertently solve the task.
+- Parent instructions must explicitly state when to recap a previously introduced concept if the learner does not remember it (e.g., even/odd means pairing without leftovers).
+- Finish with a deliberate, easy success after hard reasoning. Offer optional verbal bonus questions only if the learner is still engaged; never make bonuses mandatory.
+- Keep past lesson pages stable when revising a newer lesson. Never include personal identifiers or individual learner results in public repository files.
