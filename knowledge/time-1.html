@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kiddo · Розумію цифровий годинник</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#18253b;background:#f4f6fc}
+*{box-sizing:border-box}body{margin:0}
+main{max-width:870px;margin:auto;padding:22px 16px 80px}
+a{color:#3659b5}h1{font-size:clamp(29px,5vw,44px);line-height:1.12;margin:16px 0 8px}
+h2{font-size:clamp(22px,3.8vw,30px);margin:7px 0 12px}
+p{line-height:1.55}.muted{color:#66758d}
+.card{background:#fff;border:1px solid #e0e6f1;border-radius:23px;margin:17px 0;padding:clamp(18px,4vw,29px);box-shadow:0 8px 28px #19365409}
+.eyebrow{display:inline-block;font-size:13px;font-weight:750;letter-spacing:.04em;color:#3457a8;background:#edf2ff;border-radius:30px;padding:8px 12px}
+.digital{display:flex;justify-content:center;align-items:center;gap:5px;margin:16px auto 3px;padding:12px;background:#161f2e;border-radius:25px;color:#eaf0ff;max-width:570px;box-shadow:0 9px 24px #101c3040}
+.digit{border:2px solid transparent;border-radius:17px;background:transparent;color:#f8fcff;font:750 clamp(66px,15vw,116px)/1.14 ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.065em;padding:8px 10px;min-width:0;cursor:default}
+.digit.hours{color:#a8c7ff}.digit.minutes{color:#bcf1d2}
+.digit.tappable{cursor:pointer}.digit.tappable:focus-visible{outline:3px solid #fff}
+.colon{font:700 clamp(52px,11vw,88px)/1 ui-monospace,monospace;color:#f8fcff;padding-bottom:14px}
+.legend{display:flex;justify-content:center;gap:clamp(40px,12vw,100px);font-size:16px;font-weight:750;margin:6px 0 18px}
+.legend span:first-child{color:#2b56a5}.legend span:last-child{color:#238156}
+.tip{background:#f0f4ff;border-radius:15px;padding:15px 18px;line-height:1.55}
+button,select,textarea{font:inherit}
+button{border:0;border-radius:14px;padding:13px 20px;min-height:52px;font-weight:750;cursor:pointer;background:#355bc4;color:white}
+button:focus-visible{outline:3px solid #263e85;outline-offset:2px}
+button.secondary{background:#e8edfc;color:#254790}
+button.choice{background:#f0e9fa;border:2px solid #c3a8e8;color:#482c75;font-size:clamp(18px,3vw,23px);min-height:64px}
+button.choice.selected{background:#634495;color:white;border-color:#634495}
+button:disabled{opacity:.45;cursor:default}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:12px;margin:19px 0}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:22px 0}
+.controls button{font-size:19px;min-width:125px}
+.nav{display:flex;justify-content:space-between;gap:12px;margin:22px 0}
+.progress{height:10px;background:#dbe4f3;border-radius:20px;overflow:hidden;margin:20px 0 5px}
+.progress>div{height:100%;background:#4d74df;transition:width .2s}
+.question{font-size:clamp(20px,3vw,25px);font-weight:650;line-height:1.5;margin:17px 0}
+.feedback{min-height:26px;font-weight:700}
+.teacher{background:#fff8ea;border-left:5px solid #edb74d;border-radius:12px;padding:16px 18px;margin-top:20px}
+.teacher summary{cursor:pointer;font-weight:750}
+.teacher p{margin:12px 0}
+label{display:block;font-weight:650;margin:12px 0 5px}
+textarea,select{width:100%;padding:12px;border:1px solid #bac7dc;border-radius:11px;background:#fff}
+textarea{min-height:95px;resize:vertical}
+.checklabel{display:flex;gap:10px;align-items:center;font-weight:500}
+.checklabel input{width:20px;height:20px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.small{font-size:13px}
+.hidden{display:none}
+.plan{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.plan>div{padding:16px;border-radius:16px;background:#f1f5fd;text-align:center}
+.plan strong{font:750 clamp(32px,6vw,47px) ui-monospace,monospace}
+@media(max-width:470px){.nav button{padding:12px;font-size:15px}.controls button{min-width:110px}.card{padding:18px}.digit{padding:6px}.plan strong{font-size:29px}}
+</style>
+</head>
+<body>
+<main>
+<a href="./">← Загальні знання</a>
+<h1>⏰ Як читати цифровий годинник</h1>
+<p class="muted">Урок №1 · 25–30 хв · досліджуємо разом із дорослим</p>
+<div class="card">
+<span class="eyebrow">СПОЧАТКУ РОЗБЕРІМОСЯ</span>
+<p>Годинник показує, <strong>котра зараз година</strong>. У цифрового годинника є дві частини: <strong>ліворуч — години, праворуч — хвилини</strong>. Коли хвилин стає 60, починається нова година, а хвилини знову показують <strong>00</strong>.</p>
+<p class="tip"><strong>Дорослому:</strong> покажи справжній годинник на телефоні чи стіні. Попроси дитину знайти на ньому дві частини. Не треба відразу запам'ятовувати всі 60 хвилин.</p>
+</div>
+<div class="progress"><div id="bar" style="width:14%"></div></div>
+<p id="counter" class="muted" aria-live="polite"></p>
+<section class="card" id="taskcard">
+<span class="eyebrow" id="stage"></span>
+<h2 id="title"></h2>
+<p class="question" id="question"></p>
+<div class="digital" aria-label="Цифровий годинник">
+<button type="button" class="digit hours" id="hours" aria-label="Години">14</button>
+<div class="colon">:</div>
+<button type="button" class="digit minutes" id="minutes" aria-label="Хвилини">30</button>
+</div>
+<div class="legend"><span>ГОДИНИ</span><span>ХВИЛИНИ</span></div>
+<div id="activity"></div>
+<div class="row">
+<button id="check">Перевірити</button>
+<button id="explain" class="secondary">Пояснення</button>
+</div>
+<p id="feedback" class="feedback" aria-live="polite"></p>
+<div id="explanation" class="tip hidden"></div>
+<details class="teacher">
+<summary>👨‍🏫 Інструкція та оцінка для дорослого</summary>
+<p id="parent"></p>
+<label for="score">Самостійність (0–3)</label>
+<select id="score"><option value="">Не оцінено</option><option value="3">3 — самостійно</option><option value="2">2 — невпевнено / повільно</option><option value="1">1 — із підказкою</option><option value="0">0 — поки не виходить</option></select>
+<label for="note">Спостереження</label>
+<textarea id="note" placeholder="Що зрозумів, де знадобилася допомога, які були запитання…"></textarea>
+<label class="checklabel"><input id="repeat" type="checkbox"> Повернутися до цього завдання</label>
+</details>
+</section>
+<nav class="nav">
+<button id="prev" class="secondary">← Попереднє</button>
+<button id="next">Наступне →</button>
+</nav>
+<section class="card" id="reportcard">
+<h2>📝 Підсумок уроку</h2>
+<p class="muted">Оцінки й нотатки зберігаються лише в цьому браузері. Завантаж або скопіюй звіт після заняття.</p>
+<label for="summary">Що варто повторити наступного разу?</label>
+<textarea id="summary" placeholder="Загальні враження і наступні кроки…"></textarea>
+<div class="row">
+<button id="export">Завантажити результати (.json)</button>
+<button id="copy" class="secondary">Скопіювати звіт</button>
+</div>
+<p id="status" class="muted small"></p>
+</section>
+</main>
+<script>
+"use strict";
+const tasks=[
+ {stage:"1 · Досліджуємо",title:"Знайди хвилини",q:"На годиннику 14:30. Натисни на ту частину, яка показує хвилини.",type:"tap",start:870,answer:"minutes",parent:"Дозволь торкнутися цифр. Попроси пояснити, чому обрав праву пару. Якщо не пам'ятає, повторіть пояснення вгорі сторінки.",why:"Праворуч від двокрапки стоять хвилини: 30. Ліворуч — години: 14."},
+ {stage:"2 · Розуміємо",title:"Що означає число 14?",q:"Що означає число 14 на годиннику 14:30?",type:"choice",start:870,opts:["14 хвилин","14 годин","30 годин","30 хвилин","14 днів"],answer:"14 годин",parent:"Важливо відрізнити години від хвилин. Якщо дитина вгадує, попроси показати частину годин на дисплеї.",why:"Годинник показує 14 годин і 30 хвилин."},
+ {stage:"3 · Керуємо годинником",title:"Минає одна година",q:"Зараз 14:00. Зроби на годиннику 15:00.",type:"set",start:840,target:900,controls:[["＋1 година",60],["−1 година",-60],["＋15 хвилин",15],["−15 хвилин",-15]],parent:"Дай поклацати. Запитай, які цифри змінюються, якщо минає одна година. Тут мета — зрозуміти принцип, не швидкість.",why:"Після 14:00 через одну годину буде 15:00. Хвилини залишаться 00."},
+ {stage:"4 · Керуємо годинником",title:"Пів години",q:"Зараз 16:00. Зроби на годиннику 16:30. Пам'ятай: пів години — це 30 хвилин.",type:"set",start:960,target:990,controls:[["＋15 хвилин",15],["＋5 хвилин",5],["−5 хвилин",-5],["＋1 година",60]],parent:"Запитай, чи можна двічі додати по 15 хвилин. Якщо не виходить — покажи разом, потім поверни годинник на 16:00 і спробуйте знову.",why:"16:00 → 16:15 → 16:30. Минула половина години, але цифра годин не змінилася."},
+ {stage:"5 · Граємо вчасно",title:"Коли закінчиться гра?",q:"Ти почав гратися о 16:00. Гра триватиме 30 хвилин. Що покаже годинник наприкінці?",type:"choice",start:960,opts:["16:15","16:20","16:30","16:45","17:00"],answer:"16:30",parent:"Можна повернутися до попередньої вправи й отримати відповідь експериментом. Це не контрольна, а навчання.",why:"До 16:00 додаємо 30 хвилин, отже буде 16:30."},
+ {stage:"6 · Маленький виклик",title:"П'ятнадцять хвилин",q:"Ти почав гратися о 16:00. Коли минуть 15 хвилин?",type:"choice",start:960,opts:["16:05","16:10","16:15","16:20","16:30"],answer:"16:15",parent:"Якщо попередні завдання були складними, розв'яжіть разом. Не перетворюй це на тест на швидкість.",why:"15 хвилин після 16:00 — це 16:15."},
+ {stage:"7 · Справжня місія",title:"Мій час на гру",q:"Вибери, скільки хочеш пограти. Сторінка покаже, котра година зараз і коли потрібно закінчити.",type:"plan",start:960,parent:"Дай дитині вибрати 20 чи 30 хвилин. Подивіться на реальний годинник і порівняйте дві пари цифр. Потім запитайте: «Що буде написано на годиннику, коли час вийде?» Зворотний відлік необов'язковий.",why:"Тепер годинник можна використовувати для власних планів. Ми домовилися про час і знаємо, коли він закінчиться."}
+];
+const KEY="kiddo.knowledge.time1.v1";
+const $=id=>document.getElementById(id);
+let state={index:0,answers:{},clock:{},records:{},summary:"",planMinutes:20,endAt:null,checked:{}};
+try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");if(saved&&typeof saved==="object")state={...state,...saved}}catch(e){}
+if(!Number.isInteger(state.index)||state.index<0||state.index>=tasks.length)state.index=0;
+const fmt=n=>{n=(n%1440+1440)%1440;return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")};
+const nowMinutes=()=>{let d=new Date();return d.getHours()*60+d.getMinutes()};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function record(){const i=state.index;state.records[i]={score:$("score").value,note:$("note").value,repeat:$("repeat").checked};state.summary=$("summary").value;save()}
+function button(label,click,cls){const b=document.createElement("button");b.type="button";b.textContent=label;b.className=cls||"";b.onclick=click;return b}
+function clock(n,tappable){
+ const parts=fmt(n).split(":");$("hours").textContent=parts[0];$("minutes").textContent=parts[1];
+ for(const part of ["hours","minutes"]){const el=$(part);el.classList.toggle("tappable",!!tappable);el.onclick=tappable?()=>{state.answers[state.index]=part;delete state.checked[state.index];save();render()}:null;el.setAttribute("aria-pressed",String(tappable&&state.answers[state.index]===part));el.style.borderColor=tappable&&state.answers[state.index]===part?"#ffffff":"transparent"}
+}
+function choiceButtons(t){const row=document.createElement("div");row.className="choices";t.opts.forEach(o=>{const b=button(o,()=>{state.answers[state.index]=o;delete state.checked[state.index];save();render()},"choice"+(state.answers[state.index]===o?" selected":""));row.appendChild(b)});$("activity").appendChild(row)}
+function controlButtons(t){let row=document.createElement("div");row.className="controls";t.controls.forEach(([label,delta])=>row.appendChild(button(label,()=>{state.clock[state.index]=((state.clock[state.index]??t.start)+delta+1440)%1440;delete state.checked[state.index];save();render()},"secondary")));$("activity").appendChild(row)}
+function plan(){
+ const box=$("activity");const intro=document.createElement("p");intro.textContent="Обери свою тривалість гри:";box.appendChild(intro);
+ const opts=document.createElement("div");opts.className="choices";[10,15,20,30,40].forEach(m=>opts.appendChild(button(m+" хв",()=>{state.planMinutes=m;state.endAt=null;save();render()},"choice"+(state.planMinutes===m?" selected":""))));box.appendChild(opts);
+ const n=nowMinutes();let view=document.createElement("div");view.className="plan";
+ view.innerHTML="<div><span>ЗАРАЗ</span><br><strong>"+fmt(n)+"</strong></div><div><span>ЗАКІНЧИМО</span><br><strong>"+fmt(n+state.planMinutes)+"</strong></div>";box.appendChild(view);
+ const info=document.createElement("p");info.className="muted";info.textContent="Час береться з годинника твого пристрою. Перевір, чи він налаштований правильно.";box.appendChild(info);
+ const actions=document.createElement("div");actions.className="row";
+ const timerLabel=state.endAt===null?"Почати зворотний відлік":"Зупинити відлік";
+ actions.appendChild(button(timerLabel,()=>{state.endAt=state.endAt===null?Date.now()+state.planMinutes*60000:null;save();render()}));
+ if(state.endAt!==null){const c=document.createElement("strong");c.id="countdown";c.setAttribute("aria-live","off");c.style.fontSize="25px";actions.appendChild(c)}box.appendChild(actions);
+ const fine=document.createElement("p");fine.className="muted small";fine.textContent="Відлік показується на сторінці. Він не замінює системний будильник і не надсилає сповіщень.";box.appendChild(fine);
+ updateCountdown();
+}
+function updateCountdown(){let out=$("countdown");if(!out||state.endAt===null)return;let remaining=Math.max(0,Math.ceil((state.endAt-Date.now())/1000));let min=Math.floor(remaining/60),sec=remaining%60;out.textContent=String(min).padStart(2,"0")+":"+String(sec).padStart(2,"0")+(remaining===0?" · Час минув!":"")}
+function render(){
+ const i=state.index,t=tasks[i],r=state.records[i]||{}; $("bar").style.width=((i+1)/tasks.length*100)+"%";$("counter").textContent="Крок "+(i+1)+" із "+tasks.length;
+ $("stage").textContent=t.stage;$("title").textContent=t.title;$("question").textContent=t.q;$("parent").textContent=t.parent;$("score").value=r.score??"";$("note").value=r.note??"";$("repeat").checked=!!r.repeat;$("summary").value=state.summary||"";
+ $("activity").innerHTML="";$("feedback").textContent="";$("explanation").textContent=t.why;$("explanation").classList.add("hidden");
+ clock(t.type==="set"?(state.clock[i]??t.start):t.type==="plan"?nowMinutes():t.start,t.type==="tap");
+ if(t.type==="tap"){let note=document.createElement("p");note.className="muted";note.textContent="Торкнися лівої або правої пари великих цифр."; $("activity").appendChild(note)}
+ if(t.type==="choice")choiceButtons(t);
+ if(t.type==="set")controlButtons(t);
+ if(t.type==="plan")plan();
+ if(state.checked[i])$("feedback").textContent=state.checked[i];
+ $("check").classList.toggle("hidden",t.type==="plan");$("prev").disabled=i===0;$("next").textContent=i===tasks.length-1?"До підсумку →":"Далі →";
+}
+$("check").onclick=()=>{
+ let i=state.index,t=tasks[i],answer=t.type==="set"?state.clock[i]??t.start:state.answers[i];
+ let result=answer===undefined?"Спочатку спробуй виконати завдання.":answer===(t.type==="set"?t.target:t.answer)?"✅ Вийшло! Поясни своїми словами, як ти це зробив.":"Ще не так. Подумай або спробуй інший спосіб.";
+ state.checked[i]=result;save();$("feedback").textContent=result;
+};
+$("explain").onclick=()=>$("explanation").classList.toggle("hidden");
+$("prev").onclick=()=>{record();state.index=Math.max(0,state.index-1);save();render();$("taskcard").scrollIntoView({behavior:"smooth"})};
+$("next").onclick=()=>{record();if(state.index<tasks.length-1){state.index++;save();render();$("taskcard").scrollIntoView({behavior:"smooth"})}else $("reportcard").scrollIntoView({behavior:"smooth"})};
+["score","repeat"].forEach(id=>$(id).addEventListener("change",record));$("note").addEventListener("input",record);
+$("summary").addEventListener("input",()=>{state.summary=$("summary").value;save()});
+function report(){record();return {lesson:"Загальні знання — цифровий годинник — урок 1",date:new Date().toISOString().slice(0,10),summary:state.summary,results:tasks.map((t,i)=>({number:i+1,title:t.title,answer:t.type==="set"?(state.clock[i]??t.start):state.answers[i]??null,expected:t.answer??t.target??null,...(state.records[i]||{})}))}}
+$("export").onclick=()=>{let blob=new Blob([JSON.stringify(report(),null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="knowledge-time-1-results.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$("status").textContent="Файл зі звітом підготовлено."};
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(report(),null,2));$("status").textContent="Звіт скопійовано."}catch(e){$("status").textContent="Автоматичне копіювання недоступне. Використай завантаження."}};
+setInterval(updateCountdown,1000);
+render();
+</script>
+</body>
+</html>
