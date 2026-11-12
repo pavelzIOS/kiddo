@@ -3,178 +3,375 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kiddo · Розумію цифровий годинник</title>
+<meta name="theme-color" content="#f6f8fc">
+<title>Kiddo · Один день на годиннику</title>
 <style>
-:root{font-family:system-ui,-apple-system,sans-serif;color:#18253b;background:#f4f6fc}
-*{box-sizing:border-box}body{margin:0}
-main{max-width:870px;margin:auto;padding:22px 16px 80px}
-a{color:#3659b5}h1{font-size:clamp(29px,5vw,44px);line-height:1.12;margin:16px 0 8px}
-h2{font-size:clamp(22px,3.8vw,30px);margin:7px 0 12px}
-p{line-height:1.55}.muted{color:#66758d}
-.card{background:#fff;border:1px solid #e0e6f1;border-radius:23px;margin:17px 0;padding:clamp(18px,4vw,29px);box-shadow:0 8px 28px #19365409}
-.eyebrow{display:inline-block;font-size:13px;font-weight:750;letter-spacing:.04em;color:#3457a8;background:#edf2ff;border-radius:30px;padding:8px 12px}
-.digital{display:flex;justify-content:center;align-items:center;gap:5px;margin:16px auto 3px;padding:12px;background:#161f2e;border-radius:25px;color:#eaf0ff;max-width:570px;box-shadow:0 9px 24px #101c3040}
-.digit{border:2px solid transparent;border-radius:17px;background:transparent;color:#f8fcff;font:750 clamp(66px,15vw,116px)/1.14 ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.065em;padding:8px 10px;min-width:0;cursor:default}
-.digit.hours{color:#a8c7ff}.digit.minutes{color:#bcf1d2}
-.digit.tappable{cursor:pointer}.digit.tappable:focus-visible{outline:3px solid #fff}
-.colon{font:700 clamp(52px,11vw,88px)/1 ui-monospace,monospace;color:#f8fcff;padding-bottom:14px}
-.legend{display:flex;justify-content:center;gap:clamp(40px,12vw,100px);font-size:16px;font-weight:750;margin:6px 0 18px}
-.legend span:first-child{color:#2b56a5}.legend span:last-child{color:#238156}
-.tip{background:#f0f4ff;border-radius:15px;padding:15px 18px;line-height:1.55}
-button,select,textarea{font:inherit}
-button{border:0;border-radius:14px;padding:13px 20px;min-height:52px;font-weight:750;cursor:pointer;background:#355bc4;color:white}
-button:focus-visible{outline:3px solid #263e85;outline-offset:2px}
-button.secondary{background:#e8edfc;color:#254790}
-button.choice{background:#f0e9fa;border:2px solid #c3a8e8;color:#482c75;font-size:clamp(18px,3vw,23px);min-height:64px}
-button.choice.selected{background:#634495;color:white;border-color:#634495}
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1c2b44;background:#f6f8fc;--navy:#243e68;--blue:#456bc9;--muted:#67758e;--line:#e0e7f1;--purple:#654793}
+*{box-sizing:border-box}
+body{margin:0}
+main{max-width:950px;margin:auto;padding:24px 18px 88px}
+a{color:#3156af;text-decoration:none}
+.back{font-size:14px;font-weight:700}
+header{margin:25px 0 25px}
+.overline{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:#526e9d;font-weight:800}
+h1{font-size:clamp(30px,5vw,49px);letter-spacing:-.035em;line-height:1.12;margin:10px 0}
+h2{font-size:clamp(24px,3.6vw,33px);letter-spacing:-.025em;margin:9px 0}
+h3{margin:8px 0 10px;font-size:19px}
+p{line-height:1.55}
+.muted{color:var(--muted)}
+.lead{font-size:clamp(17px,2vw,19px);margin:12px 0;color:#53637c}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(18px,3.8vw,30px);box-shadow:0 8px 30px #243f6709}
+.workspace{margin:20px 0}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.between{justify-content:space-between}
+button,textarea,select,input{font:inherit}
+button{border:0;border-radius:14px;min-height:49px;padding:12px 17px;font-weight:750;background:var(--blue);color:#fff;cursor:pointer;touch-action:manipulation}
+button:hover:not(:disabled){filter:brightness(.97)}
+button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #7e9bdb;outline-offset:3px}
 button:disabled{opacity:.45;cursor:default}
-.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:12px;margin:19px 0}
-.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:22px 0}
-.controls button{font-size:19px;min-width:125px}
-.nav{display:flex;justify-content:space-between;gap:12px;margin:22px 0}
-.progress{height:10px;background:#dbe4f3;border-radius:20px;overflow:hidden;margin:20px 0 5px}
-.progress>div{height:100%;background:#4d74df;transition:width .2s}
-.question{font-size:clamp(20px,3vw,25px);font-weight:650;line-height:1.5;margin:17px 0}
-.feedback{min-height:26px;font-weight:700}
-.teacher{background:#fff8ea;border-left:5px solid #edb74d;border-radius:12px;padding:16px 18px;margin-top:20px}
-.teacher summary{cursor:pointer;font-weight:750}
+button.secondary{color:#294b91;background:#edf2ff}
+button.ghost{color:#314968;background:#f2f5fa}
+button.purple{color:#54357f;background:#f0e9fa;border:2px solid #c4a9e4}
+button.purple.active{color:white;background:var(--purple);border-color:var(--purple)}
+button.tiny{min-height:36px;padding:7px 11px;border-radius:10px;font-size:13px}
+.subject-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:20px}
+.subject-nav button{background:white;border:1px solid #dfe6f0;color:#58667f;border-radius:14px;font-size:13px;min-height:66px;display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:wrap}
+.subject-nav button.active{color:#294d9f;border:2px solid #5c7ed1;background:#eef3ff}
+.subject-nav .number{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#e9eef7;font-size:12px}
+.subject-nav button.active .number{background:#4c70d2;color:#fff}
+.pace{font-size:13px;color:var(--muted);font-weight:650}
+.progress{height:7px;border-radius:20px;background:#e1e8f4;overflow:hidden;margin:19px 0 7px}
+.progress div{height:100%;background:#5879d4;transition:width .25s}
+.prompt{font-size:clamp(19px,2.5vw,23px);font-weight:650;line-height:1.5;margin:16px 0}
+.instruction{padding:14px 17px;border-radius:15px;background:#eff5ff;color:#304b7a;line-height:1.55}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.toolbar button{flex:1 1 125px}
+.events{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:17px 0}
+.event{color:#2c4166;background:#f5f7fc;border:2px solid #e3eaf5;min-height:76px;text-align:left;display:flex;align-items:center;gap:9px;padding:10px;border-radius:17px}
+.event.active{background:#f1eafc;color:#543384;border-color:#845faf}
+.event .emoji{font-size:25px;line-height:1}
+.event .txt{display:flex;flex-direction:column;font-size:14px;line-height:1.35}
+.event .txt strong{font-size:16px}
+.day-wrap{padding:16px 16px 12px;background:#f6f8fe;border-radius:18px;margin:16px 0 14px}
+.day-track{height:112px;position:relative;border-radius:14px;overflow:visible;background:#f9e6bc;border:1px solid #d6dfe9}
+.day-track .night{position:absolute;top:0;bottom:0;background:#3e527b}
+.day-track .morning{position:absolute;top:0;bottom:0;left:25%;width:25%;background:#f8dfa3;opacity:.75}
+.day-track .day{position:absolute;top:0;bottom:0;left:50%;width:25%;background:#ffe9c8;opacity:.85}
+.day-track .evening{position:absolute;top:0;bottom:0;left:75%;width:25%;background:#c9d8ef;opacity:.7}
+.day-track .gridline{position:absolute;top:0;bottom:0;border-left:1px solid #ffffff75}
+.day-track .pin{position:absolute;z-index:2;transform:translateX(-50%);display:grid;place-items:center;width:29px;height:29px;border-radius:100%;background:#fff;box-shadow:0 2px 9px #27395736;font-size:17px;border:2px solid #fff}
+.day-track .pin.active{outline:3px solid #8455b1;z-index:3}
+.day-track .pin:after{content:"";position:absolute;top:27px;height:12px;width:2px;background:#fff}
+.day-track .pin.lane1{top:12px}
+.day-track .pin.lane2{top:62px}
+.day-track .pin.lane2:after{top:auto;bottom:27px}
+.day-rail{display:flex;justify-content:space-between;font:750 12px ui-monospace,SFMono-Regular,monospace;color:#506587;padding-top:10px}
+.day-slider{width:100%;height:36px;margin:8px 0 2px;accent-color:#654793;cursor:pointer}
+.time-control{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin:17px 0}
+.time-control strong{font:800 clamp(28px,6vw,42px) ui-monospace,SFMono-Regular,monospace;color:#293f69;min-width:110px;text-align:center}
+.time-control button{min-width:100px}
+.legend{display:flex;gap:15px;align-items:center;flex-wrap:wrap;font-size:13px;color:#62718d;margin-top:8px}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px}
+.navy{background:#3e527b}.sand{background:#f8dfa3}.sky{background:#c9d8ef}
+.digital{display:flex;justify-content:center;align-items:center;gap:4px;margin:19px auto 14px;padding:14px 10px;background:#182338;border-radius:25px;max-width:580px;box-shadow:0 9px 25px #18233833}
+.dpart{background:transparent;border:2px solid transparent;min-height:0;padding:8px 4px;border-radius:15px;font:760 clamp(60px,13vw,106px)/1 ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.07em}
+.dpart.hour{color:#b5c9ff}.dpart.minute{color:#b0ecc7}
+.dpart.tap{cursor:pointer}
+.dpart.selected{border-color:#fff}
+.dcolon{font:750 clamp(60px,12vw,97px)/1 ui-monospace,monospace;color:#e9eefc;padding-bottom:12px}
+.dlabels{display:flex;justify-content:center;gap:clamp(65px,15vw,115px);font-size:15px;font-weight:800}
+.dlabels span:first-child{color:#3c5eaa}.dlabels span:last-child{color:#278258}
+.large-choices{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.large-choices button{font-size:clamp(19px,3vw,23px);min-width:84px;flex:1 1 84px}
+.mission{background:#f6f4fc;padding:16px;border:1px solid #eadff6;border-radius:17px;margin-top:17px}
+.mission h3{margin-top:2px}
+.mission .counter{font-size:12px;color:#78629d;font-weight:750;letter-spacing:.06em}
+.mission p{margin:7px 0 13px}
+.message{font-weight:750;line-height:1.45;min-height:24px}
+.success{color:#237654}.tryagain{color:#8b5522}
+.zoom{padding:20px 15px 13px;border-radius:18px;background:#f5f7fb;margin:19px 0}
+.zoom-rail{display:flex;height:62px;border-radius:14px;overflow:hidden;position:relative;border:1px solid #d3dced;background:#e5e9f5}
+.zoom-fill{background:#7795d9;height:100%;transition:width .15s}
+.zoom-mid{position:absolute;left:50%;top:0;bottom:0;width:2px;background:#425c91}
+.zoom-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;margin:12px -11px 0;text-align:center;font-size:clamp(11px,1.55vw,14px);font-weight:750;color:#5a6c86}
+.zoom-steps>*{min-width:0}
+.zoom .day-slider{margin:13px 0 6px}
+.zoom-labels{display:flex;justify-content:space-between;gap:6px;font-size:14px;color:#4c6284}
+.segment-info{text-align:center;font-size:17px;color:#3b5c96;font-weight:700}
+.compare{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:17px 0}
+.compare>div{background:#f3f6fc;padding:16px;border-radius:17px;text-align:center}
+.compare strong{font:750 clamp(26px,4vw,43px) ui-monospace,monospace}
+.compare small{display:block;color:#6a7a94;font-weight:700;margin-bottom:5px}
+.countdown{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:20px 0}
+.countdown strong{font:800 clamp(34px,6vw,52px) ui-monospace,monospace}
+.timerbar{height:12px;border-radius:20px;background:#dfe6f3;overflow:hidden;margin:14px 0}
+.timerbar>div{height:100%;background:#6c8bd7;transition:width .3s}
+.teacher{margin-top:25px;border-left:5px solid #eebd67;background:#fff9ef;border-radius:14px;padding:15px 18px}
+.teacher summary{font-weight:800;cursor:pointer}
 .teacher p{margin:12px 0}
-label{display:block;font-weight:650;margin:12px 0 5px}
-textarea,select{width:100%;padding:12px;border:1px solid #bac7dc;border-radius:11px;background:#fff}
-textarea{min-height:95px;resize:vertical}
-.checklabel{display:flex;gap:10px;align-items:center;font-weight:500}
-.checklabel input{width:20px;height:20px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.small{font-size:13px}
-.hidden{display:none}
-.plan{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
-.plan>div{padding:16px;border-radius:16px;background:#f1f5fd;text-align:center}
-.plan strong{font:750 clamp(32px,6vw,47px) ui-monospace,monospace}
-@media(max-width:470px){.nav button{padding:12px;font-size:15px}.controls button{min-width:110px}.card{padding:18px}.digit{padding:6px}.plan strong{font-size:29px}}
+label{display:block;font-size:14px;font-weight:750;margin:13px 0 7px}
+select,textarea{border:1px solid #c4cede;border-radius:11px;background:#fff;padding:11px 12px;color:#1c2b44;width:100%}
+textarea{min-height:86px;resize:vertical}
+.checkrow{display:flex;align-items:center;gap:9px;font-weight:500}
+.checkrow input{width:20px;height:20px}
+.navbottom{display:flex;justify-content:space-between;gap:12px;margin:22px 0 30px}
+.navbottom button{min-width:130px}
+.report{margin-top:20px}
+.report h2{font-size:23px}
+.fine{font-size:13px;color:#728098;line-height:1.55}
+.hide{display:none!important}
+@media(max-width:620px){.subject-nav{grid-template-columns:repeat(2,1fr)}.events{grid-template-columns:repeat(2,minmax(0,1fr))}.event{min-height:69px}.day-wrap{padding:12px 9px}.digital{padding:10px 6px}.dpart{letter-spacing:-.09em}.navbottom button{min-width:0}.large-choices button{flex:1 1 73px;min-width:72px;padding:10px 9px}.zoom{padding:15px 8px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <main>
-<a href="./">← Загальні знання</a>
-<h1>⏰ Як читати цифровий годинник</h1>
-<p class="muted">Урок №1 · 25–30 хв · досліджуємо разом із дорослим</p>
-<div class="card">
-<span class="eyebrow">СПОЧАТКУ РОЗБЕРІМОСЯ</span>
-<p>Годинник показує, <strong>котра зараз година</strong>. У цифрового годинника є дві частини: <strong>ліворуч — години, праворуч — хвилини</strong>. Коли хвилин стає 60, починається нова година, а хвилини знову показують <strong>00</strong>.</p>
-<p class="tip"><strong>Дорослому:</strong> покажи справжній годинник на телефоні чи стіні. Попроси дитину знайти на ньому дві частини. Не треба відразу запам'ятовувати всі 60 хвилин.</p>
+<a class="back" href="./">← Загальні знання</a>
+<header>
+<div class="overline">Kiddo · Загальні знання · Урок 1</div>
+<h1>⏰ Один день на годиннику</h1>
+<p class="lead">Спочатку побачимо цілу добу, потім навчимося читати години та хвилини.</p>
+</header>
+<div class="subject-nav" role="navigation" aria-label="Етапи уроку">
+<button type="button" data-stage="0"><span class="number">1</span> Мій день</button>
+<button type="button" data-stage="1"><span class="number">2</span> Цифровий годинник</button>
+<button type="button" data-stage="2"><span class="number">3</span> Одна година</button>
+<button type="button" data-stage="3"><span class="number">4</span> Час на гру</button>
 </div>
-<div class="progress"><div id="bar" style="width:14%"></div></div>
-<p id="counter" class="muted" aria-live="polite"></p>
-<section class="card" id="taskcard">
-<span class="eyebrow" id="stage"></span>
-<h2 id="title"></h2>
-<p class="question" id="question"></p>
-<div class="digital" aria-label="Цифровий годинник">
-<button type="button" class="digit hours" id="hours" aria-label="Години">14</button>
-<div class="colon">:</div>
-<button type="button" class="digit minutes" id="minutes" aria-label="Хвилини">30</button>
-</div>
-<div class="legend"><span>ГОДИНИ</span><span>ХВИЛИНИ</span></div>
-<div id="activity"></div>
-<div class="row">
-<button id="check">Перевірити</button>
-<button id="explain" class="secondary">Пояснення</button>
-</div>
-<p id="feedback" class="feedback" aria-live="polite"></p>
-<div id="explanation" class="tip hidden"></div>
+<div class="progress" aria-hidden="true"><div id="progressBar" style="width:25%"></div></div>
+<div class="row between"><span class="pace" id="stageLabel">Крок 1 з 4</span><span class="pace" id="duration">8–10 хв</span></div>
+<section class="card workspace" id="workspace">
+<div class="overline" id="tag"></div>
+<h2 id="stageTitle"></h2>
+<p class="prompt" id="question"></p>
+<div id="stageBody"></div>
 <details class="teacher">
-<summary>👨‍🏫 Інструкція та оцінка для дорослого</summary>
-<p id="parent"></p>
+<summary>👨‍🏫 Підказки й нотатки для дорослого</summary>
+<div id="parentHelp"></div>
 <label for="score">Самостійність (0–3)</label>
-<select id="score"><option value="">Не оцінено</option><option value="3">3 — самостійно</option><option value="2">2 — невпевнено / повільно</option><option value="1">1 — із підказкою</option><option value="0">0 — поки не виходить</option></select>
-<label for="note">Спостереження</label>
-<textarea id="note" placeholder="Що зрозумів, де знадобилася допомога, які були запитання…"></textarea>
-<label class="checklabel"><input id="repeat" type="checkbox"> Повернутися до цього завдання</label>
+<select id="score"><option value="">Не оцінено</option><option value="3">3 — самостійно</option><option value="2">2 — невпевнено / повільно</option><option value="1">1 — з підказкою</option><option value="0">0 — поки не виходить</option></select>
+<label for="notes">Що помітив(-ла)?</label>
+<textarea id="notes" placeholder="Які пояснення допомогли? Що зацікавило? Що повторити?"></textarea>
+<label class="checkrow"><input type="checkbox" id="repeat"> Повторити цей етап іншим разом</label>
 </details>
 </section>
-<nav class="nav">
-<button id="prev" class="secondary">← Попереднє</button>
-<button id="next">Наступне →</button>
-</nav>
-<section class="card" id="reportcard">
-<h2>📝 Підсумок уроку</h2>
-<p class="muted">Оцінки й нотатки зберігаються лише в цьому браузері. Завантаж або скопіюй звіт після заняття.</p>
-<label for="summary">Що варто повторити наступного разу?</label>
-<textarea id="summary" placeholder="Загальні враження і наступні кроки…"></textarea>
-<div class="row">
-<button id="export">Завантажити результати (.json)</button>
-<button id="copy" class="secondary">Скопіювати звіт</button>
+<div class="navbottom">
+<button type="button" class="secondary" id="previous">← Назад</button>
+<button type="button" id="next">Далі →</button>
 </div>
-<p id="status" class="muted small"></p>
+<section class="card report" id="report">
+<h2>📝 Підсумок заняття</h2>
+<p class="muted">Необов'язково завершувати всі чотири етапи за один раз. Дані зберігаються лише в цьому браузері.</p>
+<label for="summary">Що вдалося та з чого почнемо наступного разу?</label>
+<textarea id="summary" placeholder="Короткий підсумок для наступного уроку…"></textarea>
+<div class="row" style="margin-top:16px">
+<button type="button" id="export">Завантажити звіт (.json)</button>
+<button type="button" class="secondary" id="copy">Скопіювати звіт</button>
+</div>
+<p id="exportStatus" class="fine" role="status"></p>
 </section>
 </main>
 <script>
 "use strict";
-const tasks=[
- {stage:"1 · Досліджуємо",title:"Знайди хвилини",q:"На годиннику 14:30. Натисни на ту частину, яка показує хвилини.",type:"tap",start:870,answer:"minutes",parent:"Дозволь торкнутися цифр. Попроси пояснити, чому обрав праву пару. Якщо не пам'ятає, повторіть пояснення вгорі сторінки.",why:"Праворуч від двокрапки стоять хвилини: 30. Ліворуч — години: 14."},
- {stage:"2 · Розуміємо",title:"Що означає число 14?",q:"Що означає число 14 на годиннику 14:30?",type:"choice",start:870,opts:["14 хвилин","14 годин","30 годин","30 хвилин","14 днів"],answer:"14 годин",parent:"Важливо відрізнити години від хвилин. Якщо дитина вгадує, попроси показати частину годин на дисплеї.",why:"Годинник показує 14 годин і 30 хвилин."},
- {stage:"3 · Керуємо годинником",title:"Минає одна година",q:"Зараз 14:00. Зроби на годиннику 15:00.",type:"set",start:840,target:900,controls:[["＋1 година",60],["−1 година",-60],["＋15 хвилин",15],["−15 хвилин",-15]],parent:"Дай поклацати. Запитай, які цифри змінюються, якщо минає одна година. Тут мета — зрозуміти принцип, не швидкість.",why:"Після 14:00 через одну годину буде 15:00. Хвилини залишаться 00."},
- {stage:"4 · Керуємо годинником",title:"Пів години",q:"Зараз 16:00. Зроби на годиннику 16:30. Пам'ятай: пів години — це 30 хвилин.",type:"set",start:960,target:990,controls:[["＋15 хвилин",15],["＋5 хвилин",5],["−5 хвилин",-5],["＋1 година",60]],parent:"Запитай, чи можна двічі додати по 15 хвилин. Якщо не виходить — покажи разом, потім поверни годинник на 16:00 і спробуйте знову.",why:"16:00 → 16:15 → 16:30. Минула половина години, але цифра годин не змінилася."},
- {stage:"5 · Граємо вчасно",title:"Коли закінчиться гра?",q:"Ти почав гратися о 16:00. Гра триватиме 30 хвилин. Що покаже годинник наприкінці?",type:"choice",start:960,opts:["16:15","16:20","16:30","16:45","17:00"],answer:"16:30",parent:"Можна повернутися до попередньої вправи й отримати відповідь експериментом. Це не контрольна, а навчання.",why:"До 16:00 додаємо 30 хвилин, отже буде 16:30."},
- {stage:"6 · Маленький виклик",title:"П'ятнадцять хвилин",q:"Ти почав гратися о 16:00. Коли минуть 15 хвилин?",type:"choice",start:960,opts:["16:05","16:10","16:15","16:20","16:30"],answer:"16:15",parent:"Якщо попередні завдання були складними, розв'яжіть разом. Не перетворюй це на тест на швидкість.",why:"15 хвилин після 16:00 — це 16:15."},
- {stage:"7 · Справжня місія",title:"Мій час на гру",q:"Вибери, скільки хочеш пограти. Сторінка покаже, котра година зараз і коли потрібно закінчити.",type:"plan",start:960,parent:"Дай дитині вибрати 20 чи 30 хвилин. Подивіться на реальний годинник і порівняйте дві пари цифр. Потім запитайте: «Що буде написано на годиннику, коли час вийде?» Зворотний відлік необов'язковий.",why:"Тепер годинник можна використовувати для власних планів. Ми домовилися про час і знаємо, коли він закінчиться."}
+// Version 2 intentionally does not reuse results from the old, differently structured lesson.
+const KEY="kiddo.knowledge.time1.v2";
+const events=[
+ {id:"wake",name:"Прокинувся",icon:"☀️",defaultHour:8},
+ {id:"breakfast",name:"Сніданок",icon:"🥐",defaultHour:9},
+ {id:"lunch",name:"Обід",icon:"🥗",defaultHour:13},
+ {id:"play",name:"Гра",icon:"🎮",defaultHour:16},
+ {id:"dinner",name:"Вечеря",icon:"🍽️",defaultHour:19},
+ {id:"sleep",name:"Лягаю спати",icon:"🌙",defaultHour:21}
 ];
-const KEY="kiddo.knowledge.time1.v1";
+const stages=[
+ {title:"Мій день: від 0 до 24",tag:"ВЕЛИКА КАРТИНА",time:"8–10 хв",question:"Коли ми прокидаємося, їмо, граємося і лягаємо спати?",
+ parent:"Покажи: 00 — початок доби, 12 — її середина, 24 — кінець. 24:00 позначає ту саму мить, що 00:00 наступної доби. Події на шкалі — лише приклад, налаштуйте під ваш звичайний день. Дай дитині обрати картку події та пересунути її, не вимагай точних годин. Сон показано з вечора до ранку через північ. Запитай, що відбувається раніше чи пізніше; не треба рахувати години між подіями."},
+ {title:"Читаємо цифровий годинник",tag:"ГОДИНИ",time:"6–7 хв",question:"Ліворуч години, праворуч хвилини. Сьогодні навчимося читати лише цілі години.",
+ parent:"Спочатку попроси натиснути на години — ліву пару цифр. Хвилини весь час залишаємо 00. Потім вибирайте години великими кнопками. Якщо не пам'ятає значення 00, повтори, що нова година щойно почалася. Порівняй обрану годину з подіями на попередній шкалі. Переводити 16:00 у «четверту дня» не вимагаємо."},
+ {title:"Що всередині однієї години?",tag:"ХВИЛИНИ",time:"7–8 хв",question:"Від 16:00 до 17:00 минає одна година. А всередині неї — 60 хвилин.",
+ parent:"Пересувайте покажчик від початку до кінця та спостерігайте, як змінюються цифри. На середині покажи 16:30. Наприкінці з'являється 17:00, а не 16:60. Поясни чверть і половину як частини смужки, не як додавання 15+15. Попроси показати початок, середину й кінець без підрахунків."},
+ {title:"Мій час на гру",tag:"ЗАСТОСОВУЄМО",time:"5–7 хв",question:"Хочеш пограти 20 чи 30 хвилин? Давай подивимося, коли цей час закінчиться.",
+ parent:"Почніть із вибору тривалості. Покажи справжній час на годиннику пристрою, а сторінка сама обчислить час завершення гри. Не вимагай робити це в голові. Запустити зворотний відлік можна за бажанням, навіть після уроку. Таймер працює за годинником пристрою; вкладка не надсилає системних сповіщень. Порівняйте 10 і 30 хвилин під час звичайних справ у наступні дні."}
+];
 const $=id=>document.getElementById(id);
-let state={index:0,answers:{},clock:{},records:{},summary:"",planMinutes:20,endAt:null,checked:{}};
-try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");if(saved&&typeof saved==="object")state={...state,...saved}}catch(e){}
-if(!Number.isInteger(state.index)||state.index<0||state.index>=tasks.length)state.index=0;
-const fmt=n=>{n=(n%1440+1440)%1440;return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")};
-const nowMinutes=()=>{let d=new Date();return d.getHours()*60+d.getMinutes()};
+const defaultHours=Object.fromEntries(events.map(e=>[e.id,e.defaultHour]));
+let state={stage:0,event:"play",hours:{...defaultHours},clockHour:8,mini:0,minute:0,minuteGoal:"",gameLength:20,timerEnd:null,timerStart:null,records:{},summary:""};
+try{const existing=JSON.parse(localStorage.getItem(KEY)||"{}");if(existing&&typeof existing==="object")state={...state,...existing,hours:{...defaultHours,...(existing.hours||{})}}}catch(e){}
+if(!Number.isInteger(state.stage)||state.stage<0||state.stage>3)state.stage=0;
+if(!events.some(e=>e.id===state.event))state.event="play";
+const pad=n=>String(n).padStart(2,"0");
+const hhmm=n=>{n=(n%1440+1440)%1440;return pad(Math.floor(n/60))+":"+pad(n%60)};
+const dayNow=()=>{let d=new Date();return d.getHours()*60+d.getMinutes()};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
-function record(){const i=state.index;state.records[i]={score:$("score").value,note:$("note").value,repeat:$("repeat").checked};state.summary=$("summary").value;save()}
-function button(label,click,cls){const b=document.createElement("button");b.type="button";b.textContent=label;b.className=cls||"";b.onclick=click;return b}
-function clock(n,tappable){
- const parts=fmt(n).split(":");$("hours").textContent=parts[0];$("minutes").textContent=parts[1];
- for(const part of ["hours","minutes"]){const el=$(part);el.classList.toggle("tappable",!!tappable);el.onclick=tappable?()=>{state.answers[state.index]=part;delete state.checked[state.index];save();render()}:null;el.setAttribute("aria-pressed",String(tappable&&state.answers[state.index]===part));el.style.borderColor=tappable&&state.answers[state.index]===part?"#ffffff":"transparent"}
-}
-function choiceButtons(t){const row=document.createElement("div");row.className="choices";t.opts.forEach(o=>{const b=button(o,()=>{state.answers[state.index]=o;delete state.checked[state.index];save();render()},"choice"+(state.answers[state.index]===o?" selected":""));row.appendChild(b)});$("activity").appendChild(row)}
-function controlButtons(t){let row=document.createElement("div");row.className="controls";t.controls.forEach(([label,delta])=>row.appendChild(button(label,()=>{state.clock[state.index]=((state.clock[state.index]??t.start)+delta+1440)%1440;delete state.checked[state.index];save();render()},"secondary")));$("activity").appendChild(row)}
-function plan(){
- const box=$("activity");const intro=document.createElement("p");intro.textContent="Обери свою тривалість гри:";box.appendChild(intro);
- const opts=document.createElement("div");opts.className="choices";[10,15,20,30,40].forEach(m=>opts.appendChild(button(m+" хв",()=>{state.planMinutes=m;state.endAt=null;save();render()},"choice"+(state.planMinutes===m?" selected":""))));box.appendChild(opts);
- const n=nowMinutes();let view=document.createElement("div");view.className="plan";
- view.innerHTML="<div><span>ЗАРАЗ</span><br><strong>"+fmt(n)+"</strong></div><div><span>ЗАКІНЧИМО</span><br><strong>"+fmt(n+state.planMinutes)+"</strong></div>";box.appendChild(view);
- const info=document.createElement("p");info.className="muted";info.textContent="Час береться з годинника твого пристрою. Перевір, чи він налаштований правильно.";box.appendChild(info);
- const actions=document.createElement("div");actions.className="row";
- const timerLabel=state.endAt===null?"Почати зворотний відлік":"Зупинити відлік";
- actions.appendChild(button(timerLabel,()=>{state.endAt=state.endAt===null?Date.now()+state.planMinutes*60000:null;save();render()}));
- if(state.endAt!==null){const c=document.createElement("strong");c.id="countdown";c.setAttribute("aria-live","off");c.style.fontSize="25px";actions.appendChild(c)}box.appendChild(actions);
- const fine=document.createElement("p");fine.className="muted small";fine.textContent="Відлік показується на сторінці. Він не замінює системний будильник і не надсилає сповіщень.";box.appendChild(fine);
- updateCountdown();
-}
-function updateCountdown(){let out=$("countdown");if(!out||state.endAt===null)return;let remaining=Math.max(0,Math.ceil((state.endAt-Date.now())/1000));let min=Math.floor(remaining/60),sec=remaining%60;out.textContent=String(min).padStart(2,"0")+":"+String(sec).padStart(2,"0")+(remaining===0?" · Час минув!":"")}
+function make(tag,cls,txt){const el=document.createElement(tag);if(cls)el.className=cls;if(txt!==undefined)el.textContent=txt;return el}
+function btn(text,fn,cls){const b=make("button",cls||"",text);b.type="button";b.onclick=fn;return b}
+function addText(to,tag,txt,cls){const el=make(tag,cls,txt);to.appendChild(el);return el}
+function setStage(s){record();state.stage=Math.min(3,Math.max(0,s));save();render();$("workspace").scrollIntoView({behavior:"smooth",block:"start"})}
+function record(){const i=state.stage;state.records[i]={score:$("score").value,note:$("notes").value,repeat:$("repeat").checked};state.summary=$("summary").value;save()}
 function render(){
- const i=state.index,t=tasks[i],r=state.records[i]||{}; $("bar").style.width=((i+1)/tasks.length*100)+"%";$("counter").textContent="Крок "+(i+1)+" із "+tasks.length;
- $("stage").textContent=t.stage;$("title").textContent=t.title;$("question").textContent=t.q;$("parent").textContent=t.parent;$("score").value=r.score??"";$("note").value=r.note??"";$("repeat").checked=!!r.repeat;$("summary").value=state.summary||"";
- $("activity").innerHTML="";$("feedback").textContent="";$("explanation").textContent=t.why;$("explanation").classList.add("hidden");
- clock(t.type==="set"?(state.clock[i]??t.start):t.type==="plan"?nowMinutes():t.start,t.type==="tap");
- if(t.type==="tap"){let note=document.createElement("p");note.className="muted";note.textContent="Торкнися лівої або правої пари великих цифр."; $("activity").appendChild(note)}
- if(t.type==="choice")choiceButtons(t);
- if(t.type==="set")controlButtons(t);
- if(t.type==="plan")plan();
- if(state.checked[i])$("feedback").textContent=state.checked[i];
- $("check").classList.toggle("hidden",t.type==="plan");$("prev").disabled=i===0;$("next").textContent=i===tasks.length-1?"До підсумку →":"Далі →";
+ const i=state.stage;const stage=stages[i];const body=$("stageBody");body.innerHTML="";
+ $("stageLabel").textContent="Крок "+(i+1)+" з 4";$("duration").textContent=stage.time;$("progressBar").style.width=25*(i+1)+"%";
+ $("tag").textContent=stage.tag;$("stageTitle").textContent=stage.title;$("question").textContent=stage.question;
+ document.querySelectorAll("[data-stage]").forEach(b=>{let selected=Number(b.dataset.stage)===i;b.classList.toggle("active",selected);b.setAttribute("aria-current",selected?"step":"false")});
+ const r=state.records[i]||{};$("score").value=r.score??"";$("notes").value=r.note??"";$("repeat").checked=!!r.repeat;$("summary").value=state.summary||"";
+ const h=$("parentHelp");h.innerHTML="";addText(h,"p",stage.parent);
+ if(i===0)renderDay(body);
+ if(i===1)renderClock(body);
+ if(i===2)renderZoom(body);
+ if(i===3)renderGame(body);
+ $("previous").disabled=i===0;$("next").textContent=i===3?"До підсумку →":"Далі →";
 }
-$("check").onclick=()=>{
- let i=state.index,t=tasks[i],answer=t.type==="set"?state.clock[i]??t.start:state.answers[i];
- let result=answer===undefined?"Спочатку спробуй виконати завдання.":answer===(t.type==="set"?t.target:t.answer)?"✅ Вийшло! Поясни своїми словами, як ти це зробив.":"Ще не так. Подумай або спробуй інший спосіб.";
- state.checked[i]=result;save();$("feedback").textContent=result;
-};
-$("explain").onclick=()=>$("explanation").classList.toggle("hidden");
-$("prev").onclick=()=>{record();state.index=Math.max(0,state.index-1);save();render();$("taskcard").scrollIntoView({behavior:"smooth"})};
-$("next").onclick=()=>{record();if(state.index<tasks.length-1){state.index++;save();render();$("taskcard").scrollIntoView({behavior:"smooth"})}else $("reportcard").scrollIntoView({behavior:"smooth"})};
-["score","repeat"].forEach(id=>$(id).addEventListener("change",record));$("note").addEventListener("input",record);
+function dayTrack(to){
+ const wrap=make("div","day-wrap");const track=make("div","day-track");track.setAttribute("role","img");track.setAttribute("aria-label","Шкала від 0 до 24 годин з подіями дня");
+ const wake=state.hours.wake, sleep=state.hours.sleep;
+ const nightLeft=make("div","night");nightLeft.style.left="0";nightLeft.style.width=(wake/24*100)+"%";
+ const nightRight=make("div","night");nightRight.style.left=(sleep/24*100)+"%";nightRight.style.width=((24-sleep)/24*100)+"%";
+ track.appendChild(make("div","morning"));track.appendChild(make("div","day"));track.appendChild(make("div","evening"));
+ track.appendChild(nightLeft);track.appendChild(nightRight);
+ for(let h=0;h<=24;h+=2){const line=make("div","gridline");line.style.left=(h/24*100)+"%";track.appendChild(line)}
+ const sorted=events.slice().sort((a,b)=>state.hours[a.id]-state.hours[b.id]);
+ let previous=-99,lane=1;
+ sorted.forEach(e=>{const at=state.hours[e.id];lane=at-previous<3?(lane===1?2:1):1;previous=at;
+  const pin=make("span","pin lane"+lane+(state.event===e.id?" active":""),e.icon);
+  pin.style.left=(at/24*100)+"%";pin.title=e.name+" — "+pad(at)+":00";track.appendChild(pin)
+ });
+ wrap.appendChild(track);
+ const labels=make("div","day-rail");[0,4,8,12,16,20,24].forEach(h=>addText(labels,"span",String(h)));wrap.appendChild(labels);
+ to.appendChild(wrap);
+}
+function renderDay(to){
+ addText(to,"p","Обери подію, а потім пересунь її на шкалі. Тут приклад дня — його можна змінити.","instruction");
+ dayTrack(to);
+ const legend=make("div","legend");
+ legend.innerHTML='<span><i class="dot navy"></i>Ніч / сон</span><span><i class="dot sand"></i>Ранок і день</span><span><i class="dot sky"></i>Вечір</span>';to.appendChild(legend);
+ const list=make("div","events");
+ events.forEach(e=>{const b=btn(" ",()=>{state.event=e.id;save();render()},"event"+(state.event===e.id?" active":""));b.textContent="";
+  addText(b,"span",e.icon,"emoji");const txt=make("span","txt");addText(txt,"strong",e.name);addText(txt,"span",pad(state.hours[e.id])+":00");b.appendChild(txt);list.appendChild(b)
+ });to.appendChild(list);
+ const chosen=events.find(e=>e.id===state.event);
+ const control=make("div","time-control");
+ control.appendChild(btn("− 1 година",()=>shiftEvent(-1),"secondary"));
+ addText(control,"strong",pad(state.hours[chosen.id])+":00");
+ control.appendChild(btn("+ 1 година",()=>shiftEvent(1),"secondary"));to.appendChild(control);
+ const slider=make("input","day-slider");slider.type="range";slider.min=0;slider.max=23;slider.step=1;slider.value=state.hours[chosen.id];slider.setAttribute("aria-label","Година події "+chosen.name);
+ slider.oninput=()=>{state.hours[chosen.id]=Number(slider.value);save();render()};to.appendChild(slider);
+ addText(to,"p","Потягни повзунок або скористайся кнопками. Години йдуть від 0 до 23, а 24 завершує добу.","fine");
+ addText(to,"p","Обговоріть: що у вас відбувається раніше — сніданок чи вечеря? А що відбувається вночі?","instruction");
+}
+function shiftEvent(diff){state.hours[state.event]=Math.max(0,Math.min(23,state.hours[state.event]+diff));save();render()}
+function digital(to,h,m,tappable){
+ const clock=make("div","digital");
+ const hour=btn(pad(h),()=>{if(tappable){state.mini=1;save();render()}},"dpart hour"+(tappable?" tap":""));
+ const minute=btn(pad(m),()=>{if(tappable){state.mini=1;save();render()}},"dpart minute"+(tappable?" tap":""));
+ if(tappable){hour.setAttribute("aria-label","Години — натиснути");minute.setAttribute("aria-label","Хвилини");}
+ else{hour.disabled=true;minute.disabled=true}
+ clock.appendChild(hour);addText(clock,"span",":","dcolon");clock.appendChild(minute);to.appendChild(clock);
+ const lab=make("div","dlabels");addText(lab,"span","ГОДИНИ");addText(lab,"span","ХВИЛИНИ");to.appendChild(lab);
+}
+function renderClock(to){
+ addText(to,"p","Ліва частина показує години. Права — хвилини. Поки хвилини завжди дорівнюють 00.","instruction");
+ digital(to,state.clockHour,0,true);
+ const choice=make("div","mission");
+ addText(choice,"span","ДОСЛІДЖУЄМО","counter");
+ addText(choice,"h3","Знайди знайомий час");
+ addText(choice,"p","Натисни на годину, щоб встановити її на годиннику. Подивися, як змінюються лише ліві цифри.");
+ const list=make("div","large-choices");
+ [0,7,8,9,12,16,19,21].forEach(h=>list.appendChild(btn(pad(h)+":00",()=>{state.clockHour=h;save();render()},"purple"+(h===state.clockHour?" active":""))));
+ choice.appendChild(list);to.appendChild(choice);
+ const m=make("div","mission");
+ addText(m,"span","МАЛЕНЬКІ ЗАВДАННЯ","counter");
+ addText(m,"h3","Покажи на годиннику");
+ const questions=[{label:"Ранок — 08:00",target:8},{label:"Час гри — 16:00",target:16}];
+ questions.forEach((q,j)=>{const row=make("div","row between");row.style.marginTop="11px";
+  addText(row,"span",q.label);
+  row.appendChild(btn("Перевірити",()=>{let el=$("clockResult"+j);el.textContent=state.clockHour===q.target?"✅ Так! Година правильна.":"Поки ні. Спробуй вибрати інше число зліва.";el.className="message "+(state.clockHour===q.target?"success":"tryagain")},"secondary tiny"));
+  m.appendChild(row);const out=addText(m,"p","","message");out.id="clockResult"+j;
+ });to.appendChild(m);
+ addText(to,"p","Можна повернутися до «Мій день» і подивитися, де ці години стоять на шкалі.","fine");
+}
+function renderZoom(to){
+ addText(to,"p","Рухай покажчик. Ми не рахуємо приклади — тільки спостерігаємо, яку частину години він пройшов.","instruction");
+ const m=state.minute;
+ digital(to,m===60?17:16,m===60?0:m,false);
+ const zoom=make("div","zoom");
+ const rail=make("div","zoom-rail");const fill=make("div","zoom-fill");fill.style.width=(m/60*100)+"%";rail.appendChild(fill);rail.appendChild(make("div","zoom-mid"));zoom.appendChild(rail);
+ const steps=make("div","zoom-steps");["16:00","16:15","16:30","16:45","17:00"].forEach(t=>addText(steps,"span",t));zoom.appendChild(steps);
+ const slider=make("input","day-slider");slider.type="range";slider.min=0;slider.max=60;slider.step=15;slider.value=m;slider.setAttribute("aria-label","Хвилини, від 0 до 60");
+ slider.oninput=()=>{state.minute=Number(slider.value);save();render()};zoom.appendChild(slider);
+ const stepText=m===0?"Початок години":m===15?"Перша чверть":m===30?"Половина години":m===45?"Три чверті": "Кінець години — починається 17:00";
+ addText(zoom,"div",stepText,"segment-info");to.appendChild(zoom);
+ const choices=make("div","large-choices");
+ [["Початок",0],["Чверть",15],["Половина",30],["Майже кінець",45],["Кінець",60]].forEach(pair=>choices.appendChild(btn(pair[0],()=>{state.minute=pair[1];save();render()},"purple"+(m===pair[1]?" active":""))));
+ to.appendChild(choices);
+ const mission=make("div","mission");
+ addText(mission,"span","ПЕРЕВІР СЕБЕ","counter");
+ addText(mission,"h3","Де середина години?");
+ addText(mission,"p","Покажи на шкалі половину між 16:00 та 17:00. Поки не підглядай у підказку дорослого.");
+ mission.appendChild(btn("Перевірити",()=>{let out=$("middleAnswer");out.textContent=state.minute===30?"✅ Так, це рівно середина години!":"Спробуй зупинитися посередині смужки.";out.className="message "+(state.minute===30?"success":"tryagain")},"secondary"));
+ const msg=addText(mission,"p","","message");msg.id="middleAnswer";to.appendChild(mission);
+ addText(to,"p","Важливо: після 16:45 не з'являється 16:60. Після 60 хвилин буде 17:00 — нова година.","instruction");
+}
+function clockTimeNow(){
+ const now=dayNow();
+ return {n:now,starts:hhmm(now),end:hhmm(now+state.gameLength)};
+}
+function renderGame(to){
+ addText(to,"p","Тут годинник допомагає домовитися про гру. Нічого додавати в голові не потрібно.","instruction");
+ const choices=make("div","large-choices");
+ [10,15,20,30,40].forEach(m=>choices.appendChild(btn(m+" хвилин",()=>{state.gameLength=m;state.timerEnd=null;state.timerStart=null;save();render()},"purple"+(m===state.gameLength?" active":""))));
+ to.appendChild(choices);
+ const started=state.timerStart!==null&&state.timerEnd!==null;
+ const now=started?new Date(state.timerStart):new Date();
+ const startM=now.getHours()*60+now.getMinutes();
+ const ends=hhmm(startM+state.gameLength);
+ const compare=make("div","compare");
+ const a=make("div");addText(a,"small","ПОЧИНАЄМО");addText(a,"strong",hhmm(startM));compare.appendChild(a);
+ const b=make("div");addText(b,"small","ЗАКІНЧУЄМО");addText(b,"strong",ends);compare.appendChild(b);
+ to.appendChild(compare);
+ addText(to,"p",started?"Гра почалася. Подивись, як змінюється відлік.":"Порівняй ці два годинники. Сторінка сама показала час закінчення гри.","muted");
+ const controls=make("div","countdown");
+ if(!started){controls.appendChild(btn("▶ Почати відлік",()=>{state.timerStart=Date.now();state.timerEnd=state.timerStart+state.gameLength*60000;save();render()}))}
+ else{
+ const counter=addText(controls,"strong","00:00");counter.id="timerDisplay";
+ controls.appendChild(btn("Зупинити",()=>{state.timerEnd=null;state.timerStart=null;save();render()},"secondary"));
+ }
+ to.appendChild(controls);
+ const prog=make("div","timerbar");const inner=make("div");inner.id="timerProgress";prog.appendChild(inner);to.appendChild(prog);
+ const info=addText(to,"p","","message");info.id="timerMessage";
+ addText(to,"p","Відлік використовує час пристрою. Ця сторінка не надсилає сповіщення, коли її закрито.","fine");
+ addText(to,"p","Запитання для розмови: що довше — 10 чи 30 хвилин? А якщо залишилося трохи часу, що можна встигнути?","instruction");
+ tickTimer();
+}
+function tickTimer(){
+ if(state.stage!==3)return;
+ const c=$("timerDisplay"),p=$("timerProgress"),msg=$("timerMessage");
+ if(!msg)return;
+ if(state.timerEnd===null||state.timerStart===null){msg.textContent="Вибери тривалість і натисни «Почати відлік», коли будеш готовий.";if(p)p.style.width="0%";return}
+ const duration=state.gameLength*60000;
+ const remaining=Math.max(0,state.timerEnd-Date.now());
+ const seconds=Math.ceil(remaining/1000);
+ if(c)c.textContent=pad(Math.floor(seconds/60))+":"+pad(seconds%60);
+ if(p)p.style.width=(Math.min(100,Math.max(0,(duration-remaining)/duration*100)))+"%";
+ msg.textContent=remaining===0?"Час минув! Подивись, котра зараз година.":"Зараз триває твій час на гру.";
+ msg.className="message "+(remaining===0?"success":"");
+}
+document.querySelectorAll("[data-stage]").forEach(b=>b.onclick=()=>setStage(Number(b.dataset.stage)));
+$("previous").onclick=()=>setStage(state.stage-1);
+$("next").onclick=()=>{if(state.stage===3){record();$("report").scrollIntoView({behavior:"smooth"});return}setStage(state.stage+1)};
+["score","repeat"].forEach(id=>$(id).addEventListener("change",record));
+$("notes").addEventListener("input",record);
 $("summary").addEventListener("input",()=>{state.summary=$("summary").value;save()});
-function report(){record();return {lesson:"Загальні знання — цифровий годинник — урок 1",date:new Date().toISOString().slice(0,10),summary:state.summary,results:tasks.map((t,i)=>({number:i+1,title:t.title,answer:t.type==="set"?(state.clock[i]??t.start):state.answers[i]??null,expected:t.answer??t.target??null,...(state.records[i]||{})}))}}
-$("export").onclick=()=>{let blob=new Blob([JSON.stringify(report(),null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="knowledge-time-1-results.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$("status").textContent="Файл зі звітом підготовлено."};
-$("copy").onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(report(),null,2));$("status").textContent="Звіт скопійовано."}catch(e){$("status").textContent="Автоматичне копіювання недоступне. Використай завантаження."}};
-setInterval(updateCountdown,1000);
+function getReport(){
+ record();
+ return {lesson:"Загальні знання · Один день на годиннику · урок 1 (версія 2)",date:new Date().toISOString().slice(0,10),events:Object.fromEntries(events.map(e=>[e.name,pad(state.hours[e.id])+":00"])),summary:state.summary,results:stages.map((s,i)=>({number:i+1,stage:s.title,...(state.records[i]||{})}))};
+}
+$("export").onclick=()=>{
+ const data=JSON.stringify(getReport(),null,2);
+ const blob=new Blob([data],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob),a=make("a");a.href=url;a.download="kiddo-time-lesson-1-v2.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $("exportStatus").textContent="Звіт підготовлено. Надішли його в чат перед наступним заняттям.";
+};
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(getReport(),null,2));$("exportStatus").textContent="Звіт скопійовано."}catch(e){$("exportStatus").textContent="Спробуй завантажити файл .json — копіювання недоступне."}};
+setInterval(tickTimer,1000);
 render();
 </script>
 </body>
