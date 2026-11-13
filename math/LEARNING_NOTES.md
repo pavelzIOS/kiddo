@@ -16,9 +16,10 @@ This public repository contains reusable lesson templates and general teaching g
 ## Interactive lesson tenets (for all future lessons)
 - Every visual must serve the reasoning. Never display a number-line stepper or other decoration that already gives away the answer; omit unnecessary visuals.
 - Make visuals approximately twice the former baseline size: large, readable, touch-friendly, responsive on tablets and phones.
-- Multiple-choice tasks should normally have five plausible choices, not three, to reduce blind guessing. Exceptions: genuine binary decisions (yes/no, true/false) and tasks where five choices are pedagogically unnatural. Request an explanation where appropriate.
-- Use answer-choice styling clearly distinct from the overall page: accessible purple/lavender is preferred. Do not use red, green or yellow for choice correctness or selection; avoid relying on color alone.
+- Never display multiple-choice answers by default: the learner should generate a number, manipulate objects, build an equation, or explain an answer aloud before checking.
+- Make input and manipulation controls large, high contrast, touch-friendly and clearly distinct from the background; do not use red/green/yellow as correctness markers.
 - Vary task mechanics and representations, not just story names. Avoid visuals that inadvertently solve the task.
 - Parent instructions must explicitly state when to recap a previously introduced concept if the learner does not remember it (e.g., even/odd means pairing without leftovers).
 - Finish with a deliberate, easy success after hard reasoning. Offer optional verbal bonus questions only if the learner is still engaged; never make bonuses mandatory.
 - Keep past lesson pages stable when revising a newer lesson. Never include personal identifiers or individual learner results in public repository files.
+\n## Generalized learning insights\n- Simple addition can be easier than subtraction, missing-part reasoning and splitting totals into two groups. Teach those concretely before abstract notation.\n- Explain the meaning of the minus sign when necessary; scaffold two-step stories one action at a time.\n- Correct answers selected from choices can reflect guessing. Require generated responses and explanation.\n- Mix new topics (e.g. shape properties) with targeted practice; keep an easy closing success.\n- These are generic teaching principles, not individual results. Never commit learner reports or identifying details.\n
